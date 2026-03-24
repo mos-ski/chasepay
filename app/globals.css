@@ -1,13 +1,35 @@
-/* @import must come before @tailwind directives to avoid PostCSS warnings */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background-color: #F6F9FC; color: #0A2540; font-family: 'Inter', sans-serif; }
+  :root {
+    --background: 213 33% 97%;       /* #F6F9FC page */
+    --foreground: 213 79% 15%;       /* #0A2540 ink */
+    --card: 0 0% 100%;               /* #FFFFFF surface */
+    --card-foreground: 213 79% 15%;  /* #0A2540 */
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 79% 15%;
+    --primary: 244 100% 67%;         /* #635BFF */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213 20% 93%;        /* near page */
+    --secondary-foreground: 213 79% 15%;
+    --muted: 213 20% 93%;
+    --muted-foreground: 215 16% 47%; /* #425466 ink-muted */
+    --accent: 244 100% 97%;          /* #F0EFFF primary-light */
+    --accent-foreground: 244 100% 67%;
+    --destructive: 352 77% 48%;      /* #DF1B41 danger */
+    --destructive-foreground: 0 0% 100%;
+    --border: 213 30% 91%;           /* #E3E8EF stroke */
+    --input: 213 30% 91%;
+    --ring: 244 100% 67%;            /* #635BFF */
+    --radius: 0.5rem;
+  }
+
+  body {
+    background-color: #F6F9FC;
+    color: #0A2540;
+  }
 }
