@@ -81,8 +81,8 @@ export default function AddDebtorWizard() {
             <>
               <h2 className="text-base font-semibold text-ink">Debt Details</h2>
               <div className="space-y-1.5">
-                <Label>Amount owed (&#8358;)</Label>
-                <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted text-sm font-medium">&#8358;</span>
+                <Label>Amount owed (₦)</Label>
+                <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted text-sm font-medium">₦</span>
                   <Input type="number" placeholder="145000" value={form.amount} onChange={e => set('amount', e.target.value)} className="border-stroke pl-8" /></div>
               </div>
               <div className="space-y-1.5"><Label>Due date</Label><Input type="date" value={form.dueDate} onChange={e => set('dueDate', e.target.value)} className="border-stroke" /></div>
@@ -134,7 +134,7 @@ export default function AddDebtorWizard() {
                 {[
                   ['Debtor', form.name || '—'],
                   ['Phone', form.phone || '—'],
-                  ['Amount', form.amount ? `&#8358;${Number(form.amount).toLocaleString()}` : '—'],
+                  ['Amount', form.amount ? `₦${Number(form.amount).toLocaleString()}` : '—'],
                   ['Due Date', form.dueDate || '—'],
                   ['Intensity', form.intensity.charAt(0).toUpperCase() + form.intensity.slice(1)],
                   ['Channels', Object.entries(form.channels).filter(([,v]) => v).map(([k]) => k.toUpperCase()).join(', ') || 'None'],
