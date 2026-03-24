@@ -6,30 +6,36 @@
 
 @layer base {
   :root {
-    --background: 213 33% 97%;       /* #F6F9FC page */
-    --foreground: 213 79% 15%;       /* #0A2540 ink */
-    --card: 0 0% 100%;               /* #FFFFFF surface */
-    --card-foreground: 213 79% 15%;  /* #0A2540 */
-    --popover: 0 0% 100%;
-    --popover-foreground: 213 79% 15%;
-    --primary: 244 100% 67%;         /* #635BFF */
+    --background: 226 40% 7%;
+    --foreground: 210 40% 95%;
+    --card: 221 27% 13%;
+    --card-foreground: 210 40% 95%;
+    --popover: 221 27% 13%;
+    --popover-foreground: 210 40% 95%;
+    --primary: 18 100% 58%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 213 20% 93%;        /* near page */
-    --secondary-foreground: 213 79% 15%;
-    --muted: 213 20% 93%;
-    --muted-foreground: 215 16% 47%; /* #425466 ink-muted */
-    --accent: 244 100% 97%;          /* #F0EFFF primary-light */
-    --accent-foreground: 244 100% 67%;
-    --destructive: 352 77% 48%;      /* #DF1B41 danger */
+    --secondary: 222 32% 15%;
+    --secondary-foreground: 210 40% 95%;
+    --muted: 222 32% 15%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 222 32% 15%;
+    --accent-foreground: 210 40% 95%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 213 30% 91%;           /* #E3E8EF stroke */
-    --input: 213 30% 91%;
-    --ring: 244 100% 67%;            /* #635BFF */
+    --border: 215 37% 20%;
+    --input: 215 37% 20%;
+    --ring: 18 100% 58%;
     --radius: 0.5rem;
   }
 
   body {
-    background-color: #F6F9FC;
-    color: #0A2540;
+    background-color: #0A0E1A;
+    color: #F1F5F9;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1F2D45; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #64748B; }
 }

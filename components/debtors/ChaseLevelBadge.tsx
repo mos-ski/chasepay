@@ -1,11 +1,23 @@
-const LEVELS: Record<number, { label: string; textClass: string; bg: string }> = {
-  1: { label: 'L1', textClass: 'text-ink-subtle', bg: '#8898AA1A' },
-  2: { label: 'L2', textClass: 'text-ink-muted', bg: '#4254661A' },
-  3: { label: 'L3', textClass: 'text-warning', bg: '#F4B7401A' },
-  4: { label: 'L4', textClass: 'text-danger-light', bg: '#F973161A' },
-  5: { label: 'L5', textClass: 'text-danger', bg: '#DF1B411A' },
+const LEVELS: Record<number, { label: string; color: string; bg: string }> = {
+  1: { label: 'L1 Friendly',      color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
+  2: { label: 'L2 Firm',          color: '#F59E0B', bg: 'rgba(245,158,11,0.12)' },
+  3: { label: 'L3 Urgent',        color: '#FF6B2B', bg: 'rgba(255,107,43,0.12)' },
+  4: { label: 'L4 Final Warning', color: '#EF4444', bg: 'rgba(239,68,68,0.12)' },
+  5: { label: 'L5 Legal',         color: '#A78BFA', bg: 'rgba(124,58,237,0.12)' },
 }
+
 export default function ChaseLevelBadge({ level }: { level: 1 | 2 | 3 | 4 | 5 }) {
-  const { label, textClass, bg } = LEVELS[level]
-  return <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${textClass}`} style={{ backgroundColor: bg }}>{label}</span>
+  const { label, color, bg } = LEVELS[level]
+  return (
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold"
+      style={{ color, backgroundColor: bg }}
+    >
+      <span
+        className="w-[10px] h-[10px] rounded-[2px] inline-block"
+        style={{ backgroundColor: color }}
+      />
+      {label}
+    </span>
+  )
 }

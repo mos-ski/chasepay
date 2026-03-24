@@ -1,45 +1,41 @@
 import type { ActivityEvent } from '@/lib/types'
-import { UserPlus, MessageSquare, DollarSign, StopCircle, PauseCircle, TrendingUp } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
-const EVENT_ICONS = {
-  debtor_added:      { icon: UserPlus,      color: 'text-primary bg-primary-light' },
-  message_sent:      { icon: MessageSquare, color: 'text-ink-muted bg-page' },
-  payment_received:  { icon: DollarSign,    color: 'text-success bg-success/10' },
-  chase_stopped:     { icon: StopCircle,    color: 'text-danger bg-danger/10' },
-  chase_paused:      { icon: PauseCircle,   color: 'text-warning bg-warning/10' },
-  level_escalated:   { icon: TrendingUp,    color: 'text-danger-light bg-danger-light/10' },
+const EVENT_DOT: Record<ActivityEvent['type'], string> = {
+  debtor_added:     'bg-primary',
+  message_sent:     'bg-blue',
+  payment_received: 'bg-success',
+  chase_stopped:    'bg-ink-subtle',
+  chase_paused:     'bg-warning',
+  level_escalated:  'bg-danger',
 }
 
 function formatTime(iso: string) {
   const d = new Date(iso)
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' · ' +
-    d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  const now = Date.now()
+  const diff = now - d.getTime()
+  if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)} hrs ago`
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 }
 
 export default function ActivityFeed({ events }: { events: ActivityEvent[] }) {
   if (events.length === 0) return (
-    <div className="flex items-center justify-center h-32 text-sm text-ink-subtle">
+    <div className="text-sm text-ink-subtle text-center py-8">
       No activity yet. Add your first debtor to get started.
     </div>
   )
 
   return (
     <div className="space-y-3">
-      {events.map(e => {
-        const { icon: Icon, color } = EVENT_ICONS[e.type]
-        return (
-          <div key={e.id} className="flex items-start gap-3">
-            <div className={cn('w-8 h-8 rounded-full flex items-center justify-center shrink-0', color)}>
-              <Icon className="w-3.5 h-3.5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-ink leading-snug">{e.description}</p>
-              <p className="text-xs text-ink-subtle mt-0.5">{formatTime(e.timestamp)}</p>
-            </div>
+      {events.map(e => (
+        <div key={e.id} className="flex items-start gap-3">
+          <div className={`w-2 h-2 rounded-full mt-[6px] shrink-0 ${EVENT_DOT[e.type]}`} />
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] text-ink leading-snug">{e.description}</p>
+            <p className="text-[11px] text-ink-subtle mt-0.5">{formatTime(e.timestamp)}</p>
           </div>
-        )
-      })}
+        </div>
+      ))}
     </div>
   )
 }

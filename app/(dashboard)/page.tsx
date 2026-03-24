@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import Topbar from '@/components/layout/Topbar'
 import StatCard from '@/components/dashboard/StatCard'
 import ActivityFeed from '@/components/dashboard/ActivityFeed'
@@ -21,7 +19,8 @@ export default function DashboardPage() {
   const activeDebtors = DEBTORS.filter(d => d.status === 'pending' || d.status === 'partial')
   const totalOwed = DEBTORS.filter(d => d.status !== 'paid').reduce((s, d) => s + d.amountOwed, 0)
   const recovered = DEBTORS.filter(d => d.status === 'paid').reduce((s, d) => s + d.amountOwed, 0)
-  const urgent = [...DEBTORS].filter(d => d.status !== 'paid' && d.status !== 'stopped')
+  const urgent = [...DEBTORS]
+    .filter(d => d.status !== 'paid' && d.status !== 'stopped')
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     .slice(0, 5)
 
@@ -31,66 +30,98 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col flex-1">
       <Topbar
-        title={`${greeting}, ${CURRENT_BUSINESS.ownerName.split(' ')[0]}`}
+        title={`${greeting}, ${CURRENT_BUSINESS.ownerName.split(' ')[0]} 👋`}
         action={
           <Link href="/debtors/new">
-            <Button className="bg-primary hover:bg-primary-hover text-white text-sm">+ Add Debtor</Button>
+            <button className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-[13.5px] font-semibold px-4 py-2 rounded-lg transition-colors">
+              + Add Debtor
+            </button>
           </Link>
         }
       />
-      <div className="p-8 space-y-6">
+
+      <div className="p-4 sm:p-6 lg:p-8 space-y-5">
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-4">
-          <StatCard label="Total Owed" value={formatNaira(totalOwed)} sub="across active debtors" />
-          <StatCard label="Recovered This Month" value={formatNaira(recovered)} trend="up" trendValue="↑" sub="from completed chases" />
-          <StatCard label="Active Chases" value={String(activeDebtors.length)} sub="debtors being chased" />
-          <StatCard label="Total Debtors" value={String(DEBTORS.length)} sub="all time" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <StatCard label="Total Outstanding" value={formatNaira(totalOwed)} sub="↑ across active debtors" color="orange" />
+          <StatCard label="Recovered This Month" value={formatNaira(recovered)} sub="↑ from completed chases" color="green" />
+          <StatCard label="Active Chases" value={String(activeDebtors.length)} sub="sending reminders now" color="red" />
+          <StatCard label="Total Debtors" value={String(DEBTORS.length)} sub="all time" color="blue" />
         </div>
 
         {/* Main content */}
-        <div className="grid grid-cols-[1fr_320px] gap-6">
-          {/* Urgent debtors */}
-          <Card className="border-stroke shadow-sm">
-            <CardHeader className="pb-3 pt-5 px-6">
-              <h2 className="text-sm font-semibold text-ink">Most Urgent Debtors</h2>
-            </CardHeader>
-            <CardContent className="px-0 pb-0">
-              {urgent.length === 0 ? (
-                <p className="text-sm text-ink-subtle text-center py-8">No active chases yet. Add a debtor to get started.</p>
-              ) : (
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-4 sm:gap-5">
+          {/* Active chases table */}
+          <div className="bg-surface border border-stroke rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-stroke">
+              <h2 className="font-syne font-bold text-[15px] text-ink">🔥 Active Chases</h2>
+              <Link href="/debtors" className="text-xs text-ink-subtle hover:text-ink transition-colors">View all →</Link>
+            </div>
+            {urgent.length === 0 ? (
+              <div className="text-sm text-ink-subtle text-center py-12">No active chases yet. Add a debtor to get started.</div>
+            ) : (
+              <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-stroke">
-                      {['Name', 'Amount', 'Overdue', 'Level', 'Status'].map(h => (
-                        <th key={h} className="text-left text-xs font-medium text-ink-subtle px-6 pb-3">{h}</th>
+                      {['Debtor', 'Amount', 'Level', 'Status'].map(h => (
+                        <th key={h} className="text-left text-[11px] font-semibold text-ink-subtle uppercase tracking-[1px] px-5 py-3">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {urgent.map(d => (
-                      <tr key={d.id} className="border-b border-stroke last:border-0 hover:bg-page transition-colors">
-                        <td className="px-6 py-3 text-sm font-medium text-ink">{d.name}</td>
-                        <td className="px-6 py-3 text-sm text-ink font-medium">{formatNaira(d.amountOwed)}</td>
-                        <td className="px-6 py-3 text-sm text-ink-muted">{daysOverdue(d.dueDate)}</td>
-                        <td className="px-6 py-3"><ChaseLevelBadge level={d.chaseLevel} /></td>
-                        <td className="px-6 py-3"><DebtorStatusBadge status={d.status} /></td>
+                      <tr key={d.id} className="border-b border-stroke/50 last:border-0 hover:bg-surface2/50 transition-colors">
+                        <td className="px-5 py-3.5">
+                          <p className="text-sm font-semibold text-ink">{d.name}</p>
+                          <p className="text-[11px] text-ink-subtle mt-0.5">{daysOverdue(d.dueDate)}</p>
+                        </td>
+                        <td className="px-5 py-3.5 text-sm font-semibold text-primary whitespace-nowrap">{formatNaira(d.amountOwed)}</td>
+                        <td className="px-5 py-3.5"><ChaseLevelBadge level={d.chaseLevel} /></td>
+                        <td className="px-5 py-3.5"><DebtorStatusBadge status={d.status} /></td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              )}
-            </CardContent>
-          </Card>
+              </div>
+            )}
+          </div>
 
           {/* Activity feed */}
-          <Card className="border-stroke shadow-sm">
-            <CardHeader className="pb-3 pt-5 px-5">
-              <h2 className="text-sm font-semibold text-ink">Recent Activity</h2>
-            </CardHeader>
-            <CardContent className="px-5 pb-5">
+          <div className="bg-surface border border-stroke rounded-xl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-stroke">
+              <h2 className="font-syne font-bold text-[15px] text-ink">⚡ Live Activity</h2>
+              <span className="text-[11px] text-success font-semibold">● LIVE</span>
+            </div>
+            <div className="px-5 py-4">
               <ActivityFeed events={ACTIVITY_EVENTS} />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+        </div>
+
+        {/* Recovery rates */}
+        <div className="bg-surface border border-stroke rounded-xl">
+          <div className="px-5 py-4 border-b border-stroke">
+            <h2 className="font-syne font-bold text-[15px] text-ink">📈 Recovery Rate (Last 30 days)</h2>
+          </div>
+          <div className="px-5 py-4 space-y-4">
+            {[
+              { label: 'SMS',              rate: 74, color: 'bg-blue' },
+              { label: 'WhatsApp',         rate: 81, color: 'bg-success' },
+              { label: 'Voice Call',       rate: 62, color: 'bg-warning' },
+              { label: 'Overall Recovery', rate: 86, color: 'bg-gradient-to-r from-primary to-warning' },
+            ].map(({ label, rate, color }) => (
+              <div key={label}>
+                <div className="flex justify-between mb-1.5 text-[13px]">
+                  <span className="text-ink">{label}</span>
+                  <span className={label === 'Overall Recovery' ? 'text-primary font-bold' : 'text-ink-subtle'}>{rate}% response rate</span>
+                </div>
+                <div className="h-1.5 bg-surface2 rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${color} transition-all duration-1000`} style={{ width: `${rate}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
